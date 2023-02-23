@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF File Upload and Download</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 5px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h2>PDF File Upload and Download</h2>
+  <form action="upload.php" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" id="file">
+    <input type="submit" value="Upload File" name="submit">
+  </form>
+  
+  <table>
+    <tr>
+      <th>File Name</th>
+      <th>Download</th>
+    </tr>
+    <?php
+      // Connect to the database
+      $conn = mysqli_connect("host", "sriram", "7834", "database");
+      
+      // Check if the connection was successful
+      if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+      }
+      
+      // Select data from the database
+      $sql = "SELECT * FROM files";
+      $result = mysqli_query($conn, $sql);
+      
+      // Loop through the results and display them in a table
+      if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+        
+          echo "<td>" . $row['filename'] . "</td>";
+          echo "<td><a href='download.php?id=" . $row['id'] . "'>Download</a></td>";
+         
+        }
+      } else {
+        echo "<tr><td colspan='2'>No data found</td></tr>";
+      }
+      
+      // Close the connection
+      mysqli_close($conn);
+    ?>
+  </table>
+</body>
+</html>
